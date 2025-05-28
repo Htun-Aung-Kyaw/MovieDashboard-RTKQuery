@@ -1,0 +1,24 @@
+.noReviews > td{
+    background-color: #F8D7D9 !important;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    /*background: #F9F9FB;*/
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+.stickyHeader{
+    position: sticky;
+    top: 58px;
+    z-index: 4;
+}
+
+.colWidth20{
+    width: 20%;
+}
+.colWidth40{
+    width: 40%;
+}

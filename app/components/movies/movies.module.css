@@ -1,0 +1,54 @@
+.error{
+    color: red !important;
+    font-weight: 400;
+}
+.rating{
+    color: #FF6F00 !important;
+    font-weight: 500;
+}
+.moviesContainer{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+.movieList{
+    /*height: 37rem;*/
+    /*overflow: auto;*/
+    width: 90%;
+    margin: 20px auto;
+    flex: 1;
+}
+.sticky{
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #F9F9FB;
+    padding: 1rem 0;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+    /*border-bottom: 1px solid #D3D3D3;*/
+}
+.stickyTitle{
+    position: sticky;
+    top: 72px;
+    z-index: 3;
+}
+.stickyHeader{
+    /*background: #F9F9FB;*/
+    position: sticky;
+    top: 150px;
+    z-index: 4;
+}
+.center{
+    text-align: center;
+}
+.end{
+    text-align: right;
+}
+
+.pr{
+    padding-right: 1.5rem;
+}
+.mr{
+    margin-right: 1.5rem !important;
+}

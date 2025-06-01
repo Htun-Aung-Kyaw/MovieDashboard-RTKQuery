@@ -477,7 +477,7 @@ export const transformMovies =
                         .map(item=> Object.fromEntries(item));
 
 export const movieExtracted = transformMovies.map(movie=>({
-        '_id' : (Math.random()+'').split('.')[1],
+        // '_id' : (Math.random()+'').split('.')[1],
         'title': movie.title,
         'year': movie.year.slice(0,4),
         'director': {
@@ -486,8 +486,8 @@ export const movieExtracted = transformMovies.map(movie=>({
 }))
 
 export const reviewExtracted = transformMovies.map((movie, index)=>({
-        '_id' : (Math.random()+'').split('.')[1],
-        'movie': movieExtracted[index]._id,
+        // '_id' : (Math.random()+'').split('.')[1],
+        // 'movie': movieExtracted[index]._id,
         'review': movie.plot,
         'rating': movie.imdbRating,
 }))

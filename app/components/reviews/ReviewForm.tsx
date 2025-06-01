@@ -1,4 +1,4 @@
-import {Review} from "@/lib/features/reviews/reviewApiSlice";
+import {Review, useAddReviewMutation, useUpdateReviewMutation} from "@/lib/features/reviews/reviewApiSlice";
 import {Button, Form as BForm, Modal} from "react-bootstrap";
 import * as Yup from 'yup';
 import {ErrorMessage, Field, Form, Formik, FormikValues} from "formik";
@@ -6,6 +6,7 @@ import styles from "@/app/components/movies/movies.module.css";
 import {useAppDispatch} from "@/lib/hooks";
 import {addReview, updateReview} from "@/lib/features/reviews/reviewSlice";
 import {Movie} from "@/lib/features/movies/movieApiSice";
+import Swal from "sweetalert2";
 
 const ReviewSchema = Yup.object().shape({
     review: Yup.string().required('Required'),
@@ -20,7 +21,9 @@ export default function ReviewForm({movie, review, show, handleClose, edit} : {
     edit?: boolean;
 }) {
 
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
+    const [addReviewApi, addReviewApiResult] = useAddReviewMutation();
+    const [updateReviewApi, updateReviewApiResult] = useUpdateReviewMutation();
 
     const initValues =  {
         title: movie?.title || '',
@@ -30,19 +33,21 @@ export default function ReviewForm({movie, review, show, handleClose, edit} : {
     }
 
     function submitHandler(values: FormikValues) {
-        console.log(values);
-        const id = Math.random()+"";
         const newReview: Review = {
-            _id: review?._id || id?.split('.')[1],
+            ...review,
             movie: movie?._id,
             review: values.review,
             rating: values.rating,
         }
         console.log(newReview);
-        if(edit)
-            dispatch(updateReview(newReview))
-        else
-            dispatch(addReview(newReview));
+        if(edit) {
+            updateReviewApi(newReview);
+            Swal.fire("Review Updated", "", "info");
+        }
+        else {
+            addReviewApi(newReview);
+            Swal.fire("New Review Added", "", "info");
+        }
     }
 
     return (

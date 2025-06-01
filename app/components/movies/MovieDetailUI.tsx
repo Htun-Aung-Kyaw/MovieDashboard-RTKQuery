@@ -1,9 +1,9 @@
 "use client";
 import {useRouter} from "next/navigation";
-import {Review} from "@/lib/features/reviews/reviewApiSlice";
+import {Review, useGetReviewByIdQuery, useGetReviewsQuery} from "@/lib/features/reviews/reviewApiSlice";
 import { useAppSelector} from "@/lib/hooks";
 import {selectMovies} from "@/lib/features/movies/movieSlice";
-import {Movie} from "@/lib/features/movies/movieApiSice";;
+import {Movie, useGetMoviesQuery} from "@/lib/features/movies/movieApiSice";;
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined, KeyboardBackspace} from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -26,11 +26,19 @@ export default function MovieDetailUI({id}: {id: string})
         router.push("/movies");
     }
 
-    const moviesList = useAppSelector(selectMovies);
+    const {movie} = useGetMoviesQuery(undefined,{
+        selectFromResult: ({data:movies}) => ({
+            movie: movies?.find(movie=>movie._id === id)
+        }),
+    })
+    const {review} = useGetReviewsQuery(undefined,{
+        selectFromResult: ({data:reviews}) => ({
+            review: reviews?.find(review=>review.movie === id)
+        }),
+    });
 
-
-    const movie = moviesList.find((movie: Movie) => movie._id === id);
-    const review = useAppSelector(selectReview).find((review: Review) => review.movie === id);
+    // const movie = moviesList.find((movie: Movie) => movie._id === id);
+    // const review = useAppSelector(selectReview).find((review: Review) => review.movie === id);
 
     function editHandler() {
         handleShow();

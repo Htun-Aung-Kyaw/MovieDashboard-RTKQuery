@@ -1,19 +1,24 @@
 "use client";
-import {Movie} from "@/lib/features/movies/movieApiSice";
+import {Movie, useDeleteMovieMutation} from "@/lib/features/movies/movieApiSice";
 import {useRouter} from "next/navigation";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined,} from "@mui/icons-material";
-import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {deleteMovie} from "@/lib/features/movies/movieSlice";
 import styles from "./movies.module.css";
-import {deleteReview, selectReview} from "@/lib/features/reviews/reviewSlice";
+import Swal from 'sweetalert2';
+import {useDeleteReviewMutation, useGetReviewsQuery} from "@/lib/features/reviews/reviewApiSlice";
 
 export default function MovieUI({movie, index}: {movie: Movie, index?: number}) {
-    const dispatch = useAppDispatch();
-    const reviews = useAppSelector(selectReview);
 
-    const review = reviews.find(review => review.movie === movie._id);
+    const [deleteMovieApi] = useDeleteMovieMutation();
+    const [deleteReviewApi] = useDeleteReviewMutation();
+
+    const {review} = useGetReviewsQuery(undefined,{
+        selectFromResult: ({data:reviews}) => ({
+            review: reviews?.find(review => review.movie === movie._id)
+        })
+    });
+
 
     const router = useRouter();
     function detailBtnHandler() {
@@ -21,8 +26,22 @@ export default function MovieUI({movie, index}: {movie: Movie, index?: number}) 
     }
 
     function deleteHandler() {
-        dispatch(deleteMovie(movie));
-        dispatch(deleteReview(review));
+        Swal.fire({
+            title: 'Delete Movie!',
+            text: 'Are you sure to delete?',
+            icon: 'warning',
+            confirmButtonText: 'Yes, delete it!',
+            showDenyButton: true,
+            showCancelButton: true,
+            denyButtonText: `No`,
+        }).then(result => {
+            if (result.isConfirmed) {
+                deleteMovieApi(movie?._id);
+                deleteReviewApi(review?._id);
+            }else if (result.isDenied) {
+                Swal.fire("Okay not deleted!", "", "info");
+            }
+        })
     }
 
     return (

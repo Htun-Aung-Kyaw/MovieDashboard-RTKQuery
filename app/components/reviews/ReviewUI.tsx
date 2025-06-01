@@ -6,15 +6,22 @@ import EditIcon from "@mui/icons-material/Edit";
 import {Movie} from "@/lib/features/movies/movieApiSice";
 import {useState} from "react";
 import ReviewForm from "@/app/components/reviews/ReviewForm";
-import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {deleteReview, selectReview} from "@/lib/features/reviews/reviewSlice";
 import styles from './reviews.module.css';
-
+import Swal from "sweetalert2";
+import {useDeleteReviewMutation, useGetReviewsQuery} from "@/lib/features/reviews/reviewApiSlice";
 
 export default function ReviewUI({movie, index}: {movie: Movie, index?: number}) {
 
-    const dispatch = useAppDispatch();
-    const reviewsList = useAppSelector(selectReview);
+    const {data}=useGetReviewsQuery(undefined);
+    console.log("Data:",data);
+
+    const {review} = useGetReviewsQuery(undefined,{
+        selectFromResult: ({data:reviews}) => ({
+            review: reviews?.find(review=>review.movie === movie._id)
+        }),
+    });
+
+    const [deleteReviewApi, deleteReviewApiResult] = useDeleteReviewMutation();
 
     const [show, setShow] = useState(false);
     const [edit, setEdit] = useState(false);
@@ -22,7 +29,7 @@ export default function ReviewUI({movie, index}: {movie: Movie, index?: number})
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const review = reviewsList.find((review) =>  review?.movie === movie._id);
+    console.log("Review",review);
 
     function editHandler() {
         if(review)
@@ -33,7 +40,23 @@ export default function ReviewUI({movie, index}: {movie: Movie, index?: number})
     }
 
     function deleteHandler() {
-        dispatch(deleteReview(review));
+        Swal.fire({
+            title: 'Delete Review!',
+            text: 'Are you sure to delete?',
+            icon: 'warning',
+            confirmButtonText: 'Yes, delete it!',
+            showDenyButton: true,
+            showCancelButton: true,
+            denyButtonText: `No`,
+        }).then(result => {
+            if (result.isConfirmed) {
+                Swal.fire("Okay deleted!", "", "info");
+                // dispatch(deleteReview(review));
+                deleteReviewApi(review?._id);
+            }else if (result.isDenied) {
+                Swal.fire("Okay not deleted!", "", "info");
+            }
+        })
     }
 
     const reviewClass = (!review || review.rating == "N/A")? styles.noReviews : '';

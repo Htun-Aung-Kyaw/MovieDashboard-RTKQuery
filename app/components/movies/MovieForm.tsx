@@ -2,9 +2,12 @@ import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage, FormikValues} from 'formik';
 import {Button, Modal,Form as BForm} from "react-bootstrap";
 import styles from "./movies.module.css";
-import {Movie} from "@/lib/features/movies/movieApiSice";
+import {Movie, useAddMovieMutation, useUpdateMovieMutation} from "@/lib/features/movies/movieApiSice";
 import { useAppDispatch } from "@/lib/hooks";
-import {addMovie, updateMovie, } from "@/lib/features/movies/movieSlice";
+import {addMovie, deleteMovie, updateMovie,} from "@/lib/features/movies/movieSlice";
+import Swal from "sweetalert2";
+import {deleteReview} from "@/lib/features/reviews/reviewSlice";
+import {mockMovies} from "@/lib/mockMovies";
 
 const MovieSchema = Yup.object().shape({
     title: Yup.string()
@@ -42,24 +45,43 @@ export default function MovieForm({movie, show, handleClose, edit} : {
         phoneNo: movie?.director.phoneNo || '',
     };
 
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
+    const [addMovieApi] = useAddMovieMutation();
+    const [updateMovieApi] = useUpdateMovieMutation();
 
     function submitHandler(values: FormikValues) {
-        const id = Math.random()+"";
         const newMovie: Movie = {
-            _id: edit? movie?._id : id?.split('.')[1],
+            ...movie,
             title: values.title,
             director: {
+                ...movie?.director,
                 name: values.directorName,
                 phoneNo: values.phoneNo,
             },
             year: values.year,
         }
-        console.log(newMovie, edit);
-        if(edit)
-            dispatch(updateMovie(newMovie))
-        else
-            dispatch(addMovie(newMovie));
+        console.log(newMovie);
+        if(edit) {
+            Swal.fire({
+                title: 'Edit Movie!',
+                text: 'Are you sure to edit?',
+                icon: 'warning',
+                confirmButtonText: 'Yes',
+                showDenyButton: true,
+                showCancelButton: true,
+                denyButtonText: `No`,
+            }).then(result => {
+                if (result.isConfirmed) {
+                    // dispatch(updateMovie(newMovie))
+                    updateMovieApi(newMovie);
+                }
+            })
+        }
+        else {
+            // dispatch(addMovie(newMovie));
+            addMovieApi(newMovie).unwrap().then(result => {console.log(result)});
+            Swal.fire("New Movie Added", "", "info");
+        }
     }
 
     return (
@@ -71,7 +93,7 @@ export default function MovieForm({movie, show, handleClose, edit} : {
                 <Formik initialValues={initValues}
                         validationSchema={MovieSchema}
                         onSubmit={(values, {setSubmitting}) => {
-                            setSubmitting(false);
+                            setSubmitting(true);
                             submitHandler(values);
                             handleClose();
                         }}>

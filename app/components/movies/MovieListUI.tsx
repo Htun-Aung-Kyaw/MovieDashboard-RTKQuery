@@ -1,40 +1,85 @@
 "use client";
 
-import MovieUI from "@/app/components/movies/MovieUI";
-import {Table} from "react-bootstrap";
 import styles from "./movies.module.css";
-import { useAppSelector} from "@/lib/hooks";
-import { selectMovies} from "@/lib/features/movies/movieSlice";
+import {useGetMoviesQuery} from "@/lib/features/movies/movieApiSice";
+import {useMemo, useState} from "react";
+import SearchBar from "@/app/components/movies/SearchBar";
+import MoviesTable from "@/app/components/movies/MoviesTable";
+// import {mockMovies} from "@/lib/mockMovies";
+// import {useEffect} from "react";
+// import {IconButton, Tooltip} from "@mui/material";
+// import {AddCircle} from "@mui/icons-material";
+// import {blue} from "@mui/material/colors";
 
 export default function MovieListUI() {
 
-    // const dispatch = useAppDispatch();
+    const {data, error, isError, isLoading, isSuccess}  = useGetMoviesQuery();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sort, setSort] = useState('Original');
 
-    // useEffect(() => {
-    //    dispatch(loadMovies());
+    const filteredMovies = useMemo(() => {
+        const moviesToManipulate = data || []; // this is important to solve ts error undefined
+
+        const filter = moviesToManipulate.filter((movie) => {
+            return movie.title.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+
+        if (sort !== 'Original') {
+            return [...filter].sort((a, b) => {
+                const nameA = a.title.toUpperCase(); // ignore upper and lowercase
+                const nameB = b.title.toUpperCase(); // ignore upper and lowercase
+                if (nameA < nameB) {
+                    return sort === 'Ascending' ? -1 : 1;
+                }
+                if (nameA > nameB) {
+                    return sort === 'Ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        else {
+            return filter;
+        }
+    },[data, searchTerm, sort]);
+
+
+    // For adding data to server.
+    // const [addMovieApi] = useAddMovieMutation();
+    // const addToServer = (movie: Movie) => addMovieApi(movie);
+    // const moviesList = useAppSelector(selectMovies);
+    // useEffect(()=>{
+    //     moviesList.map((movie) => addToServer(movie));
     // },[]);
 
-    const moviesItem = useAppSelector(selectMovies);
-    return (
-        <div className={styles.movieList}>
-            <h5 className={`alert alert-info ${styles.stickyTitle}`}>Total Movies: {moviesItem.length}</h5>
-            <Table hover className="align-middle position-relative">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Movie Title</th>
-                        <th>Director</th>
-                        <th>Year</th>
-                        <th className={"text-center"}>Rating</th>
-                        <th className="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+    if (isError){
+        if('status' in error){
+            const errMsg:any = error.data;
+            return (
+                <div className={styles.movieList+" "+styles.center}>
                     {
-                        moviesItem?.map((movie, index) => <MovieUI key={movie?._id} movie={movie} index={++index}/>)
+                        error.status == "FETCH_ERROR" ? <h4>Check your server connection</h4> :
+                            errMsg? <h4>No Movies yet</h4> : <h4>Error | Something went wrong.</h4>
                     }
-                </tbody>
-            </Table>
-        </div>
-    )
+                </div>
+            )
+        }
+    }
+
+    if (isLoading){
+        return (
+            <h4 className={styles.movieList+" "+styles.center}>Loading...</h4>
+        )
+    }
+
+    if (isSuccess) {
+        return (
+            <div className={styles.movieList}>
+                <h5 className={`alert alert-info ${styles.stickyTitle}`}>Total Movies: {filteredMovies?.length}</h5>
+                <SearchBar className={`${styles.stickySearch}`}
+                           searchTerm={searchTerm} setSearchTerm={setSearchTerm}
+                           sort={sort} setSort={setSort}/>
+                <MoviesTable movies={filteredMovies}/>
+            </div>
+        )
+    }
 }

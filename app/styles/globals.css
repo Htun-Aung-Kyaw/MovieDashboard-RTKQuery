@@ -64,3 +64,62 @@ a {
 .mr{
   margin-right: 1.5rem !important;
 }
+
+/*Filter CSS*/
+.user-filter-container {
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #F9F9FB;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 15px;
+  /*margin-bottom: 25px;*/
+  /*justify-content: center;*/
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-input,
+.select {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 250px;
+  margin-right: 20px;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.search-input:focus,
+.select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.select {
+  width: 150px;
+  cursor: pointer;
+}
+.no-results {
+  text-align: center;
+  color: orangered;
+  font-style: italic;
+  padding: 20px !important;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px dashed #ddd;
+}

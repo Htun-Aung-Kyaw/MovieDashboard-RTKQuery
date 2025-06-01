@@ -33,6 +33,11 @@
     top: 72px;
     z-index: 3;
 }
+.stickySearch{
+    position: sticky;
+    top: 142px;
+    z-index: 4;
+}
 .stickyHeader{
     /*background: #F9F9FB;*/
     position: sticky;

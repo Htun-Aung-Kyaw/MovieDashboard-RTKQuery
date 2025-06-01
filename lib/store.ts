@@ -2,10 +2,12 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import {moviesSlice} from "@/lib/features/movies/movieSlice";
 import {reviewSlice} from "@/lib/features/reviews/reviewSlice";
+import {movieApiSlice} from "@/lib/features/movies/movieApiSice";
+import {reviewApiSlice} from "@/lib/features/reviews/reviewApiSlice";
 
 // `combineSlices` automatically combines the reducers using
 // their `reducerPath`s, therefore we no longer need to call `combineReducers`.
-const rootReducer = combineSlices(moviesSlice, reviewSlice,);
+const rootReducer = combineSlices(moviesSlice, reviewSlice, movieApiSlice, reviewApiSlice);
 // Infer the `RootState` type from the root reducer
 export type RootState = ReturnType<typeof rootReducer>;
 
@@ -18,6 +20,9 @@ export const makeStore = () => {
     reducer: rootReducer,
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
+    middleware: (getDefaultMiddleware) => {
+      return getDefaultMiddleware().concat(movieApiSlice.middleware).concat(reviewApiSlice.middleware);
+    },
   });
 };
 

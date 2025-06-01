@@ -48,3 +48,35 @@ tagTypes: ["Movies"],
             invalidatesTags: ['Movies'],
 })
 ```
+
+### Search and Sort Feature
+
+```bash
+const [searchTerm, setSearchTerm] = useState('');
+    const [sort, setSort] = useState('Original');
+
+    const filteredMovies = useMemo(() => {
+        const moviesToManipulate = data || []; // this is important to solve ts error undefined
+
+        const filter = moviesToManipulate.filter((movie) => {
+            return movie.title.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+
+        if (sort !== 'Original') {
+            return [...filter].sort((a, b) => {
+                const nameA = a.title.toUpperCase(); // ignore upper and lowercase
+                const nameB = b.title.toUpperCase(); // ignore upper and lowercase
+                if (nameA < nameB) {
+                    return sort === 'Ascending' ? -1 : 1;
+                }
+                if (nameA > nameB) {
+                    return sort === 'Ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        else {
+            return filter;
+        }
+    },[data, searchTerm, sort]);
+```

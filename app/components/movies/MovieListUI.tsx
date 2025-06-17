@@ -1,17 +1,18 @@
 "use client";
 
 import styles from "./movies.module.css";
-import {useGetMoviesQuery} from "@/lib/features/movies/movieApiSice";
+import {useGetMoviesQuery} from "@/lib/features/movies/movieApiSlice";
 import {useMemo, useState} from "react";
 import SearchBar from "@/app/components/movies/SearchBar";
 import MoviesTable from "@/app/components/movies/MoviesTable";
+import IsAuth from "@/app/components/auth/IsAuth";
 // import {mockMovies} from "@/lib/mockMovies";
 // import {useEffect} from "react";
 // import {IconButton, Tooltip} from "@mui/material";
 // import {AddCircle} from "@mui/icons-material";
 // import {blue} from "@mui/material/colors";
 
-export default function MovieListUI() {
+function MovieListUI() {
 
     const {data, error, isError, isLoading, isSuccess}  = useGetMoviesQuery();
     const [searchTerm, setSearchTerm] = useState('');
@@ -57,8 +58,8 @@ export default function MovieListUI() {
             return (
                 <div className={styles.movieList+" "+styles.center}>
                     {
-                        error.status == "FETCH_ERROR" ? <h4>Check your server connection</h4> :
-                            errMsg? <h4>No Movies yet</h4> : <h4>Error | Something went wrong.</h4>
+                        error.status == "FETCH_ERROR" ? <h5>Check your server connection</h5> :
+                            errMsg? <h5>{errMsg}</h5> : <h5>Error | Something went wrong.</h5>
                     }
                 </div>
             )
@@ -67,7 +68,7 @@ export default function MovieListUI() {
 
     if (isLoading){
         return (
-            <h4 className={styles.movieList+" "+styles.center}>Loading...</h4>
+            <h4 className={styles.movieList + " " + styles.center}>Loading...</h4>
         )
     }
 
@@ -83,3 +84,5 @@ export default function MovieListUI() {
         )
     }
 }
+
+export default IsAuth(MovieListUI);

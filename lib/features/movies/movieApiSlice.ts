@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {RootState} from "@/lib/store";
 
 export interface Director{
     name: string,
@@ -17,7 +18,18 @@ export interface Movie{
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const movieApiSlice = createApi({
-    baseQuery: fetchBaseQuery({baseUrl: BACKEND_URL}),
+    baseQuery: fetchBaseQuery({
+            baseUrl: BACKEND_URL,
+            prepareHeaders: (headers, {getState}) => {
+                const state = getState() as RootState;
+                // console.log('prepareHeaders State ', state);
+                if(state.auth.token)
+                {
+                    headers.set('Authorization', 'Bearer '+state.auth.token);
+                }
+                return headers;
+            }
+    }),
     reducerPath: "movieApi",
     tagTypes: ["Movies"],
     endpoints: (build) => ({

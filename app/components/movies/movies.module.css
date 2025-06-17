@@ -1,6 +1,7 @@
 .error{
     color: red !important;
     font-weight: 400;
+    font-size: .8rem;
 }
 .rating{
     color: #FF6F00 !important;

@@ -3,7 +3,7 @@ import {useRouter} from "next/navigation";
 import {Review, useGetReviewByIdQuery, useGetReviewsQuery} from "@/lib/features/reviews/reviewApiSlice";
 import { useAppSelector} from "@/lib/hooks";
 import {selectMovies} from "@/lib/features/movies/movieSlice";
-import {Movie, useGetMoviesQuery} from "@/lib/features/movies/movieApiSice";;
+import {Movie, useGetMoviesQuery} from "@/lib/features/movies/movieApiSlice";;
 import {IconButton, Tooltip} from "@mui/material";
 import {InfoOutlined, KeyboardBackspace} from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,7 +23,7 @@ export default function MovieDetailUI({id}: {id: string})
 
     const router = useRouter();
     function backBtnHandler() {
-        router.push("/movies");
+        router.push("/movies?auth=true");
     }
 
     const {movie} = useGetMoviesQuery(undefined,{

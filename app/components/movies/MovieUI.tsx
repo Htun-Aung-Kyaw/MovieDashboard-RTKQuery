@@ -1,5 +1,5 @@
 "use client";
-import {Movie, useDeleteMovieMutation} from "@/lib/features/movies/movieApiSice";
+import {Movie, useDeleteMovieMutation} from "@/lib/features/movies/movieApiSlice";
 import {useRouter} from "next/navigation";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {IconButton, Tooltip} from "@mui/material";
@@ -7,11 +7,14 @@ import {InfoOutlined,} from "@mui/icons-material";
 import styles from "./movies.module.css";
 import Swal from 'sweetalert2';
 import {useDeleteReviewMutation, useGetReviewsQuery} from "@/lib/features/reviews/reviewApiSlice";
+import {selectAuth} from "@/lib/features/auth/authSlice";
+import {useSelector} from "react-redux";
 
 export default function MovieUI({movie, index}: {movie: Movie, index?: number}) {
 
     const [deleteMovieApi] = useDeleteMovieMutation();
     const [deleteReviewApi] = useDeleteReviewMutation();
+    const auth = useSelector(selectAuth);
 
     const {review} = useGetReviewsQuery(undefined,{
         selectFromResult: ({data:reviews}) => ({
@@ -22,7 +25,7 @@ export default function MovieUI({movie, index}: {movie: Movie, index?: number}) 
 
     const router = useRouter();
     function detailBtnHandler() {
-        router.push(`/movies/${movie._id}`);
+        router.push(`/movies/${movie._id}${auth?"?auth=true":""}`);
     }
 
     function deleteHandler() {
@@ -37,7 +40,7 @@ export default function MovieUI({movie, index}: {movie: Movie, index?: number}) 
         }).then(result => {
             if (result.isConfirmed) {
                 deleteMovieApi(movie?._id);
-                deleteReviewApi(review?._id);
+                review && deleteReviewApi(review?._id);
             }else if (result.isDenied) {
                 Swal.fire("Okay not deleted!", "", "info");
             }

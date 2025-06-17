@@ -6,11 +6,12 @@ import {Table} from "react-bootstrap";
 import {useAppSelector} from "@/lib/hooks";
 import {selectReview} from "@/lib/features/reviews/reviewSlice";
 import {selectMovies} from "@/lib/features/movies/movieSlice";
-import {useGetMoviesQuery} from "@/lib/features/movies/movieApiSice";
+import {useGetMoviesQuery} from "@/lib/features/movies/movieApiSlice";
 import {Review, useAddReviewMutation, useGetReviewsQuery} from "@/lib/features/reviews/reviewApiSlice";
 import {useEffect} from "react";
+import isAuth from "@/app/components/auth/IsAuth";
 
-export default function ReviewList() {
+function ReviewList() {
     // const reviewsList = useAppSelector(selectReview);
     // const moviesList = useAppSelector(selectMovies);
 
@@ -48,3 +49,5 @@ export default function ReviewList() {
         </div>
     )
 }
+
+export default isAuth(ReviewList);

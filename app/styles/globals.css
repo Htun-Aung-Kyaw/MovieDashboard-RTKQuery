@@ -123,3 +123,31 @@ h2 {
   border-radius: 6px;
   border: 1px dashed #ddd;
 }
+.loading{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+}
+.loading {
+  animation: fancy-spin 2000ms;
+  animation-iteration-count: infinite;
+}
+@keyframes fancy-spin {
+  0% {
+    transform: rotate(0turn) scale(1);
+  }
+  25% {
+    transform: rotate(1turn) scale(1);
+  }
+  50% {
+    transform: rotate(1turn) scale(1.5);
+  }
+  75% {
+    transform: rotate(0turn) scale(1.5);
+  }
+  100% {
+    transform: rotate(0turn) scale(1);
+  }
+}

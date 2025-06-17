@@ -3,7 +3,7 @@ import NewMovie from "@/app/components/movies/NewMovie";
 import {Metadata} from "next";
 import styles from "@/app/components/movies/movies.module.css";
 import {mockMovies} from "@/lib/mockMovies";
-import {useAddMovieMutation} from "@/lib/features/movies/movieApiSice";
+import {useAddMovieMutation} from "@/lib/features/movies/movieApiSlice";
 
 export default function Page()
 {

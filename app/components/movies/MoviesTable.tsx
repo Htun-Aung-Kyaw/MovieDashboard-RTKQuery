@@ -1,6 +1,6 @@
 import MovieUI from "@/app/components/movies/MovieUI";
 import {Table} from "react-bootstrap";
-import {Movie} from "@/lib/features/movies/movieApiSice";
+import {Movie} from "@/lib/features/movies/movieApiSlice";
 
 export default function MoviesTable({ movies }: { movies: Movie[] }) {
     return (

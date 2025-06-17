@@ -5,7 +5,7 @@ import {ErrorMessage, Field, Form, Formik, FormikValues} from "formik";
 import styles from "@/app/components/movies/movies.module.css";
 import {useAppDispatch} from "@/lib/hooks";
 import {addReview, updateReview} from "@/lib/features/reviews/reviewSlice";
-import {Movie} from "@/lib/features/movies/movieApiSice";
+import {Movie} from "@/lib/features/movies/movieApiSlice";
 import Swal from "sweetalert2";
 
 const ReviewSchema = Yup.object().shape({
@@ -39,7 +39,7 @@ export default function ReviewForm({movie, review, show, handleClose, edit} : {
             review: values.review,
             rating: values.rating,
         }
-        console.log(newReview);
+        // console.log(newReview);
         if(edit) {
             updateReviewApi(newReview);
             Swal.fire("Review Updated", "", "info");

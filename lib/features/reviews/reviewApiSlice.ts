@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {Movie} from "@/lib/features/movies/movieApiSice";
+import {Movie} from "@/lib/features/movies/movieApiSlice";
+import {RootState} from "@/lib/store";
 
 export interface Review {
     _id?: string;
@@ -12,7 +13,18 @@ export interface Review {
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const reviewApiSlice = createApi({
-    baseQuery: fetchBaseQuery({baseUrl: BACKEND_URL}),
+    baseQuery: fetchBaseQuery({
+        baseUrl: BACKEND_URL,
+        prepareHeaders: (headers, {getState}) => {
+            const state = getState() as RootState;
+            // console.log('prepareHeaders State ', state);
+            if(state.auth.token)
+            {
+                headers.set('Authorization', 'Bearer '+state.auth.token);
+            }
+            return headers;
+        }
+    }),
     reducerPath: "reviewApi",
     tagTypes: ["Reviews"],
     endpoints: (build) => ({

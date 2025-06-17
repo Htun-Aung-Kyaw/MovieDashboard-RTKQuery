@@ -2,12 +2,8 @@ import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage, FormikValues} from 'formik';
 import {Button, Modal,Form as BForm} from "react-bootstrap";
 import styles from "./movies.module.css";
-import {Movie, useAddMovieMutation, useUpdateMovieMutation} from "@/lib/features/movies/movieApiSice";
-import { useAppDispatch } from "@/lib/hooks";
-import {addMovie, deleteMovie, updateMovie,} from "@/lib/features/movies/movieSlice";
+import {Movie, useAddMovieMutation, useUpdateMovieMutation} from "@/lib/features/movies/movieApiSlice";
 import Swal from "sweetalert2";
-import {deleteReview} from "@/lib/features/reviews/reviewSlice";
-import {mockMovies} from "@/lib/mockMovies";
 
 const MovieSchema = Yup.object().shape({
     title: Yup.string()
@@ -22,8 +18,8 @@ const MovieSchema = Yup.object().shape({
         .max(50, 'Too Long!')
         .required('Required'),
     phoneNo:Yup.string()
-        .length(9, 'must have 9 numbers')
-        .required('Required'),
+        .matches(/^\d{9}$/, 'Phone number must be exactly 9 digits') // Key part: regex for 9 digits
+        .required('Phone number is required'),
 });
 
 export default function MovieForm({movie, show, handleClose, edit} : {

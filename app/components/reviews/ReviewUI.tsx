@@ -3,7 +3,7 @@
 import {IconButton, Tooltip} from "@mui/material";
 import {DeleteOutlined, } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import {Movie} from "@/lib/features/movies/movieApiSice";
+import {Movie} from "@/lib/features/movies/movieApiSlice";
 import {useState} from "react";
 import ReviewForm from "@/app/components/reviews/ReviewForm";
 import styles from './reviews.module.css';
@@ -12,8 +12,8 @@ import {useDeleteReviewMutation, useGetReviewsQuery} from "@/lib/features/review
 
 export default function ReviewUI({movie, index}: {movie: Movie, index?: number}) {
 
-    const {data}=useGetReviewsQuery(undefined);
-    console.log("Data:",data);
+    // const {data}=useGetReviewsQuery(undefined);
+    // console.log("Data:",data);
 
     const {review} = useGetReviewsQuery(undefined,{
         selectFromResult: ({data:reviews}) => ({
@@ -29,7 +29,7 @@ export default function ReviewUI({movie, index}: {movie: Movie, index?: number})
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    console.log("Review",review);
+    // console.log("Review",review);
 
     function editHandler() {
         if(review)
